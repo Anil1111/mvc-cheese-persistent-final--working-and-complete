@@ -49,9 +49,6 @@ namespace CheeseMVC.Controllers
 
             if (ModelState.IsValid)
             {
-               // CheeseCategory newCheeseCategory =
-                  //  context.Categories.Single(c => c.ID == addCheeseViewModel.CategoryID);
-                // Add the new cheese to my existing cheeses
                 Cheese newCheese = new Cheese
                 {
                     Name = addCheeseViewModel.Name,
@@ -67,6 +64,7 @@ namespace CheeseMVC.Controllers
             }
 
             return View(addCheeseViewModel);
+           // return Redirect("/Cheese/Add");
         }
         public IActionResult Remove()
         {
@@ -89,21 +87,20 @@ namespace CheeseMVC.Controllers
         }
         
          public IActionResult Category(int id)
-        {
-        
+         {       
             if (id==0)
-           {
+         {
          
-           return Redirect ("/Category");
-         }
+             return Redirect ("/Category");
+           }
          
-         CheeseCategory theCheese= context.Categories
-          
+            CheeseCategory theCategory= context.Categories
+              .Include(cat=> cat.Cheeses)
               .Single(cat=> cat.ID==id);
           
-           ViewBag.title ="Cheese in category:  " + theCheese.Name;
+             ViewBag.title ="Cheese in category:  " + theCategory.Name;
 
-            return View("Index", theCheese.Cheeses);
-          }
-    }
+              return View("Index", theCategory.Cheeses);
+           }
+         }
 }
